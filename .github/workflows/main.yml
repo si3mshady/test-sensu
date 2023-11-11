@@ -98,7 +98,7 @@ jobs:
                   "name": "check-pipeline-status"
                 },
                 "status": 2,
-                "output": "Failed test step"
+                "output": "Failed test step wft"
               }
             }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
           fi
