@@ -38,34 +38,18 @@ jobs:
             echo "::set-output name=BUILD_OUTCOME::failure"
           fi
 
+      - name: Generate Payload for Build
+        run: echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 0, "output": "Successful build step"}}' > payload.json
+
       - name: Check Build Outcome and Trigger HTTPie Command
         run: |
           if [[ "${{ steps.build.outcome }}" == "success" ]]; then
             echo "Build succeeded. Triggering success httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events <<'EOF'
-          {
-            "check": {
-              "metadata": {
-                "name": "check-pipeline-status"
-              },
-              "status": 0,
-              "output": "Successful build step"
-            }
-          }
-          EOF
+            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Build failed. Triggering failure httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events <<'EOF'
-            {
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 2,
-                "output": "Failed build step"
-              }
-            }
-            EOF
+            echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 2, "output": "Failed build step"}}' > payload.json
+            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
 
@@ -88,34 +72,18 @@ jobs:
             echo "::set-output name=TEST_OUTCOME::failure"
           fi
 
+      - name: Generate Payload for Test
+        run: echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 0, "output": "Successful test step"}}' > payload.json
+
       - name: Check Test Outcome and Trigger HTTPie Command
         run: |
           if [[ "${{ steps.test.outcome }}" == "success" ]]; then
             echo "Tests succeeded. Triggering success httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events <<'EOF'
-            {
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 0,
-                "output": "Successful test step"
-              }
-            }
-            EOF
+            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Tests failed. Triggering failure httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events <<'EOF'
-          {
-            "check": {
-              "metadata": {
-                "name": "check-pipeline-status"
-              },
-              "status": 2,
-              "output": "Failed test step"
-            }
-          }
-          EOF
+            echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 2, "output": "Failed test step"}}' > payload.json
+            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
 
@@ -138,33 +106,4 @@ jobs:
             echo "::set-output name=DEPLOY_OUTCOME::failure"
           fi
 
-      - name: Check Deploy Outcome and Trigger HTTPie Command
-        run: |
-          if [[ "${{ steps.deploy.outcome }}" == "success" ]]; then
-            echo "Deployment succeeded. Triggering success httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events <<'EOF'
-            {
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 0,
-                "output": "Successful deploy step"
-              }
-            }
-            EOF
-          else
-            echo "Deployment failed. Triggering failure httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events <<'EOF'
-          {
-            "check": {
-              "metadata": {
-                "name": "check-pipeline-status"
-              },
-              "status": 2,
-              "output": "Failed deploy step"
-            }
-          }
-          EOF
-          fi
-          sleep 5  # 5-second sleep
+      - name:
