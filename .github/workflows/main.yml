@@ -46,7 +46,7 @@ jobs:
               "metadata": {
                 "name": "check-pipeline-status '$TIMESTAMP'"
               },
-              "status": 2,
+              "status": 0,
               "output": "Successful build step at '$TIMESTAMP'"
             }
           }' > payload.json
@@ -64,7 +64,7 @@ jobs:
                 "metadata": {
                   "name": "check-pipeline-status '$TIMESTAMP'"
                 },
-                "status": 2,
+                "status": 1,
                 "output": "Failed build step at '$TIMESTAMP'"
               }
             }' > payload.json
@@ -99,7 +99,7 @@ jobs:
               "metadata": {
                 "name": "check-pipeline-status '$TIMESTAMP'"
               },
-              "status": 2,
+              "status": 0,
               "output": "Successful test step at '$TIMESTAMP'"
             }
           }' > payload.json
@@ -117,7 +117,7 @@ jobs:
                 "metadata": {
                   "name": "check-pipeline-status"
                 },
-                "status": 2,
+                "status": 1,
                 "output": "Failed test step at '$TIMESTAMP'"
               }
             }' > payload.json
@@ -152,7 +152,7 @@ jobs:
               "metadata": {
                 "name": "check-pipeline-status '$TIMESTAMP'"
               },
-              "status": 2,
+              "status": 0,
               "output": "Successful deploy step at '$TIMESTAMP'"
             }
           }' > payload.json
