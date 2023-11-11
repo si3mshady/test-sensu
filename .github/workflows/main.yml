@@ -44,7 +44,7 @@ jobs:
           echo '{
             "check": {
               "metadata": {
-                "name": "check-pipeline-status"
+                "name": "check-pipeline-status '$TIMESTAMP'"
               },
               "status": 2,
               "output": "Successful build step at '$TIMESTAMP'"
@@ -55,20 +55,20 @@ jobs:
         run: |
           if [[ "${{ steps.build.outcome }}" == "success" ]]; then
             echo "Build succeeded. Triggering success httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
+            http --json POST https://3528-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Build failed. Triggering failure httpie command..."
             TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
             echo '{
               "check": {
                 "metadata": {
-                  "name": "check-pipeline-status"
+                  "name": "check-pipeline-status '$TIMESTAMP'"
                 },
                 "status": 2,
                 "output": "Failed build step at '$TIMESTAMP'"
               }
             }' > payload.json
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
+            http --json POST https://3528-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
 
@@ -97,7 +97,7 @@ jobs:
           echo '{
             "check": {
               "metadata": {
-                "name": "check-pipeline-status"
+                "name": "check-pipeline-status '$TIMESTAMP'"
               },
               "status": 2,
               "output": "Successful test step at '$TIMESTAMP'"
@@ -108,7 +108,7 @@ jobs:
         run: |
           if [[ "${{ steps.test.outcome }}" == "success" ]]; then
             echo "Tests succeeded. Triggering success httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
+            http --json POST https://3528-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Tests failed. Triggering failure httpie command..."
             TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -121,7 +121,7 @@ jobs:
                 "output": "Failed test step at '$TIMESTAMP'"
               }
             }' > payload.json
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
+            http --json POST https://3528-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
 
@@ -150,7 +150,7 @@ jobs:
           echo '{
             "check": {
               "metadata": {
-                "name": "check-pipeline-status"
+                "name": "check-pipeline-status '$TIMESTAMP'"
               },
               "status": 2,
               "output": "Successful deploy step at '$TIMESTAMP'"
@@ -161,19 +161,20 @@ jobs:
         run: |
           if [[ "${{ steps.deploy.outcome }}" == "success" ]]; then
             echo "Deployment succeeded. Triggering success httpie command..."
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
+            http --json POST https://3528-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Deployment failed. Triggering failure httpie command..."
             TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
             echo '{
               "check": {
                 "metadata": {
-                  "name": "check-pipeline-status"
+                  "name": "check-pipeline-status '$TIMESTAMP'"
                 },
                 "status": 2,
                 "output": "Failed deploy step at '$TIMESTAMP'"
               }
             }' > payload.json
-            http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
+            http --json POST https://3528-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
+
