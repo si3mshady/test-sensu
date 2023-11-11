@@ -40,7 +40,7 @@ jobs:
 
       - name: Generate Payload for Build
         run: |
-         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 0, "output": "Successful build step"}}' > payload.json
+         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 1, "output": "Successful build step"}}' > payload.json
 
       - name: Check Build Outcome and Trigger HTTPie Command
         run: |
@@ -75,7 +75,7 @@ jobs:
 
       - name: Generate Payload for Test
         run: |
-         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 0, "output": "Successful test step"}}' > payload.json
+         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 1, "output": "Successful test step"}}' > payload.json
 
       - name: Check Test Outcome and Trigger HTTPie Command
         run: |
@@ -110,7 +110,7 @@ jobs:
 
       - name: Generate Payload for Deploy
         run: |
-          echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 0, "output": "Successful deploy step"}}' > payload.json
+          echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 1, "output": "Successful deploy step"}}' > payload.json
 
       - name: Check Deploy Outcome and Trigger HTTPie Command
         run: |
