@@ -13,17 +13,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install cURL 8.0.1
+      - name: Install HTTPie
         run: |
-          sudo apt-get -y remove --purge curl
-          sudo apt-get autoremove -y
-          wget https://curl.se/download/curl-8.0.1.tar.gz
-          tar -xzvf curl-8.0.1.tar.gz
-          cd curl-8.0.1
-          ./configure
-          make
-          sudo make install
-          curl --version  # Verify the installation
+          sudo apt update
+          sudo apt install -y httpie
 
       - name: Build
         id: build
@@ -44,30 +37,20 @@ jobs:
             echo "::set-output name=BUILD_OUTCOME::failure"
           fi
 
-      - name: Check Build Outcome and Trigger Curl Command
+      - name: Check Build Outcome and Trigger HTTPie Command
         run: |
           if [[ "${{ steps.build.outcome }}" == "success" ]]; then
-            echo "Build succeeded. Triggering success curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d '{
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 0,
-                "output": "Successful build step"
-              }
-            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
+            echo "Build succeeded. Triggering success HTTPie command..."
+            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+              check:=metadata:=name=check-pipeline-status \
+              status:=0 \
+              output="Successful build step"
           else
-            echo "Build failed. Triggering failure curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d '{
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 2,
-                "output": "Failed build step"
-              }
-            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
+            echo "Build failed. Triggering failure HTTPie command..."
+            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+              check:=metadata:=name=check-pipeline-status \
+              status:=2 \
+              output="Failed build step"
           fi
           sleep 5  # 5-second sleep
 
@@ -90,30 +73,20 @@ jobs:
             echo "::set-output name=TEST_OUTCOME::failure"
           fi
 
-      - name: Check Test Outcome and Trigger Curl Command
+      - name: Check Test Outcome and Trigger HTTPie Command
         run: |
           if [[ "${{ steps.test.outcome }}" == "success" ]]; then
-            echo "Tests succeeded. Triggering success curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d '{
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 0,
-                "output": "Successful test step"
-              }
-            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
+            echo "Tests succeeded. Triggering success HTTPie command..."
+            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+              check:=metadata:=name=check-pipeline-status \
+              status:=0 \
+              output="Successful test step"
           else
-            echo "Tests failed. Triggering failure curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d '{
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 2,
-                "output": "Failed test step"
-              }
-            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
+            echo "Tests failed. Triggering failure HTTPie command..."
+            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+              check:=metadata:=name=check-pipeline-status \
+              status:=2 \
+              output="Failed test step"
           fi
           sleep 5  # 5-second sleep
 
@@ -136,29 +109,19 @@ jobs:
             echo "::set-output name=DEPLOY_OUTCOME::failure"
           fi
 
-      - name: Check Deploy Outcome and Trigger Curl Command
+      - name: Check Deploy Outcome and Trigger HTTPie Command
         run: |
           if [[ "${{ steps.deploy.outcome }}" == "success" ]]; then
-            echo "Deployment succeeded. Triggering success curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d '{
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 0,
-                "output": "Successful deploy step"
-              }
-            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
+            echo "Deployment succeeded. Triggering success HTTPie command..."
+            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+              check:=metadata:=name=check-pipeline-status \
+              status:=0 \
+              output="Successful deploy step"
           else
-            echo "Deployment failed. Triggering failure curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d '{
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 2,
-                "output": "Failed deploy step"
-              }
-            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
+            echo "Deployment failed. Triggering failure HTTPie command..."
+            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+              check:=metadata:=name=check-pipeline-status \
+              status:=2 \
+              output="Failed deploy step"
           fi
           sleep 5  # 5-second sleep
