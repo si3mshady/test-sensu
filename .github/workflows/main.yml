@@ -13,10 +13,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install HTTPie
+      - name: Install cURL 8.0.1
         run: |
-          sudo apt update
-          sudo apt install -y httpie
+          sudo apt-get -y remove --purge curl
+          sudo apt-get autoremove -y
+          wget https://curl.se/download/curl-8.0.1.tar.gz
+          tar -xzvf curl-8.0.1.tar.gz
+          cd curl-8.0.1
+          ./configure
+          make
+          sudo make install
+          curl --version  # Verify the installation
 
       - name: Build
         id: build
@@ -41,13 +48,13 @@ jobs:
         run: |
           if [[ "${{ steps.build.outcome }}" == "success" ]]; then
             echo "Build succeeded. Triggering success HTTPie command..."
-            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+            http POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
               check:=metadata:=name=check-pipeline-status \
               status:=0 \
               output="Successful build step"
           else
             echo "Build failed. Triggering failure HTTPie command..."
-            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+            http POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
               check:=metadata:=name=check-pipeline-status \
               status:=2 \
               output="Failed build step"
@@ -77,13 +84,13 @@ jobs:
         run: |
           if [[ "${{ steps.test.outcome }}" == "success" ]]; then
             echo "Tests succeeded. Triggering success HTTPie command..."
-            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+            http POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
               check:=metadata:=name=check-pipeline-status \
               status:=0 \
               output="Successful test step"
           else
             echo "Tests failed. Triggering failure HTTPie command..."
-            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+            http POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
               check:=metadata:=name=check-pipeline-status \
               status:=2 \
               output="Failed test step"
@@ -113,13 +120,13 @@ jobs:
         run: |
           if [[ "${{ steps.deploy.outcome }}" == "success" ]]; then
             echo "Deployment succeeded. Triggering success HTTPie command..."
-            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+            http POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
               check:=metadata:=name=check-pipeline-status \
               status:=0 \
               output="Successful deploy step"
           else
             echo "Deployment failed. Triggering failure HTTPie command..."
-            http --ignore-stdin POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
+            http POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events \
               check:=metadata:=name=check-pipeline-status \
               status:=2 \
               output="Failed deploy step"
