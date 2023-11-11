@@ -16,7 +16,7 @@ jobs:
       - name: Install curl
         run: |
           sudo apt update
-          sudo apt install -y curl=7.78.0-1ubuntu2.10
+          sudo apt install -y curl
 
       - name: Build
         id: build
