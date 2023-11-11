@@ -75,7 +75,7 @@ jobs:
 
       - name: Generate Payload for Test
         run: |
-         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 1, "output": "Successful test step"}}' > payload.json
+         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 0, "output": "Successful test step"}}' > payload.json
 
       - name: Check Test Outcome and Trigger HTTPie Command
         run: |
