@@ -13,6 +13,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Install curl
+        run: |
+          sudo apt update
+          sudo apt install -y curl=7.78.0-1ubuntu2.10
+
       - name: Build
         id: build
         run: |
@@ -139,4 +144,14 @@ jobs:
             }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
           else
             echo "Deployment failed. Triggering failure curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d
+            curl -X POST -H 'Content-Type: application/json' -d '{
+              "check": {
+                "metadata": {
+                  "name": "check-pipeline-status"
+                },
+                "status": 2,
+                "output": "Failed deploy step"
+              }
+            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
+          fi
+          sleep 5  # 5-second sleep
