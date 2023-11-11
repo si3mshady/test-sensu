@@ -57,6 +57,7 @@ jobs:
               }
             }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
           fi
+          sleep 5  # 5-second sleep
 
       - name: Test
         id: test
@@ -98,10 +99,11 @@ jobs:
                   "name": "check-pipeline-status"
                 },
                 "status": 2,
-                "output": "Failed test step wft"
+                "output": "Failed test step"
               }
             }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
           fi
+          sleep 5  # 5-second sleep
 
       - name: Deploy
         id: deploy
@@ -137,13 +139,4 @@ jobs:
             }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
           else
             echo "Deployment failed. Triggering failure curl command..."
-            curl -X POST -H 'Content-Type: application/json' -d '{
-              "check": {
-                "metadata": {
-                  "name": "check-pipeline-status"
-                },
-                "status": 2,
-                "output": "Failed deploy step"
-              }
-            }'  https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events
-          fi
+            curl -X POST -H 'Content-Type: application/json' -d
