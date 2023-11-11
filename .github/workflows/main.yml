@@ -40,7 +40,16 @@ jobs:
 
       - name: Generate Payload for Build
         run: |
-         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 1, "output": "Successful build step"}}' > payload.json
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo '{
+            "check": {
+              "metadata": {
+                "name": "check-pipeline-status"
+              },
+              "status": 0,
+              "output": "Successful build step at '$TIMESTAMP'"
+            }
+          }' > payload.json
 
       - name: Check Build Outcome and Trigger HTTPie Command
         run: |
@@ -49,7 +58,16 @@ jobs:
             http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Build failed. Triggering failure httpie command..."
-            echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 2, "output": "Failed build step"}}' > payload.json
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            echo '{
+              "check": {
+                "metadata": {
+                  "name": "check-pipeline-status"
+                },
+                "status": 2,
+                "output": "Failed build step at '$TIMESTAMP'"
+              }
+            }' > payload.json
             http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
@@ -75,7 +93,16 @@ jobs:
 
       - name: Generate Payload for Test
         run: |
-         echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 0, "output": "Successful test step"}}' > payload.json
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo '{
+            "check": {
+              "metadata": {
+                "name": "check-pipeline-status"
+              },
+              "status": 0,
+              "output": "Successful test step at '$TIMESTAMP'"
+            }
+          }' > payload.json
 
       - name: Check Test Outcome and Trigger HTTPie Command
         run: |
@@ -84,7 +111,16 @@ jobs:
             http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Tests failed. Triggering failure httpie command..."
-            echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 2, "output": "Failed test step"}}' > payload.json
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            echo '{
+              "check": {
+                "metadata": {
+                  "name": "check-pipeline-status"
+                },
+                "status": 2,
+                "output": "Failed test step at '$TIMESTAMP'"
+              }
+            }' > payload.json
             http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
@@ -110,7 +146,16 @@ jobs:
 
       - name: Generate Payload for Deploy
         run: |
-          echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 1, "output": "Successful deploy step"}}' > payload.json
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo '{
+            "check": {
+              "metadata": {
+                "name": "check-pipeline-status"
+              },
+              "status": 0,
+              "output": "Successful deploy step at '$TIMESTAMP'"
+            }
+          }' > payload.json
 
       - name: Check Deploy Outcome and Trigger HTTPie Command
         run: |
@@ -119,7 +164,16 @@ jobs:
             http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           else
             echo "Deployment failed. Triggering failure httpie command..."
-            echo '{"check": {"metadata": {"name": "check-pipeline-status"}, "status": 2, "output": "Failed deploy step"}}' > payload.json
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            echo '{
+              "check": {
+                "metadata": {
+                  "name": "check-pipeline-status"
+                },
+                "status": 2,
+                "output": "Failed deploy step at '$TIMESTAMP'"
+              }
+            }' > payload.json
             http --json POST https://db9c-2603-8080-6300-b84-bd0d-90fe-4799-511c.ngrok.io/events < payload.json
           fi
           sleep 5  # 5-second sleep
